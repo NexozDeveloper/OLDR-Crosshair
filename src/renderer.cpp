@@ -16,14 +16,10 @@
 namespace oldr {
 namespace {
 
-// Lucide icons live in a 24x24 box. We render them inside a 36x36 view box
-// (6 units of margin on every side) so rotation / outline never clip.
 constexpr float kBox = 24.0f;
 constexpr float kView = 36.0f;
 constexpr float kMargin = 6.0f;
 
-// Rasterizes `body` (inner Lucide markup) into an 8-bit alpha mask of cw x ch.
-// `scale` is pixels per Lucide unit; (tx, ty) is the pixel position of the view-box origin.
 void RasterMask(const char* body, float stroke, float rotation, float scale, float tx, float ty,
                 int cw, int ch, std::vector<uint8_t>& alpha) {
     static NSVGrasterizer* rast = nsvgCreateRasterizer();
@@ -52,7 +48,6 @@ void RasterMask(const char* body, float stroke, float rotation, float scale, flo
     for (size_t i = 0; i < alpha.size(); ++i) alpha[i] = rgba[i * 4 + 3];
 }
 
-// Three box-blur passes ~ gaussian. Radius in pixels.
 void BoxBlur(std::vector<uint8_t>& a, int w, int h, int radius) {
     if (radius < 1) return;
     const int r = std::max(1, static_cast<int>(radius / 1.7f + 0.5f));
@@ -60,7 +55,7 @@ void BoxBlur(std::vector<uint8_t>& a, int w, int h, int radius) {
     std::vector<float> cur(a.begin(), a.end());
     const float inv = 1.0f / (2 * r + 1);
     for (int pass = 0; pass < 3; ++pass) {
-        for (int y = 0; y < h; ++y) { // horizontal
+        for (int y = 0; y < h; ++y) { 
             const float* src = &cur[static_cast<size_t>(y) * w];
             float* dst = &tmp[static_cast<size_t>(y) * w];
             float sum = 0;
@@ -71,7 +66,7 @@ void BoxBlur(std::vector<uint8_t>& a, int w, int h, int radius) {
                 sum += (add < w ? src[add] : 0.0f) - (sub >= 0 ? src[sub] : 0.0f);
             }
         }
-        for (int x = 0; x < w; ++x) { // vertical
+        for (int x = 0; x < w; ++x) { 
             float sum = 0;
             for (int y = 0; y <= r && y < h; ++y) sum += tmp[static_cast<size_t>(y) * w + x];
             for (int y = 0; y < h; ++y) {
@@ -101,7 +96,7 @@ uint32_t HueToRgb(double hueDeg) {
            static_cast<uint32_t>(b * 255 + 0.5);
 }
 
-struct Px { uint32_t a = 0, r = 0, g = 0, b = 0; }; // premultiplied, 0..255
+struct Px { uint32_t a = 0, r = 0, g = 0, b = 0; }; 
 
 inline void Over(Px& d, uint8_t mask, uint32_t rgb, uint32_t globalAlpha) {
     if (!mask) return;
@@ -120,7 +115,7 @@ int DotIndex() {
     return 0;
 }
 
-}  // namespace
+} 
 
 void Renderer::RenderTile(int iconIndex, int tilePx, float stroke, std::vector<uint8_t>& alpha) {
     iconIndex = std::clamp(iconIndex, 0, kIconCount - 1);
@@ -128,7 +123,7 @@ void Renderer::RenderTile(int iconIndex, int tilePx, float stroke, std::vector<u
 }
 
 void Renderer::BuildMasks(const Settings& s) {
-    const float scale = s.size / kBox; // px per Lucide unit
+    const float scale = s.size / kBox; 
     const int inner = static_cast<int>(std::ceil(kView * scale));
     const int pad = s.glow ? s.glowRadius * 2 + 2 : 0;
     w_ = h_ = inner + pad * 2;
@@ -140,7 +135,6 @@ void Renderer::BuildMasks(const Settings& s) {
 
     RasterMask(body, stroke, rot, scale, static_cast<float>(pad), static_cast<float>(pad), w_, h_, main_);
 
-    // Center dot: the Lucide "dot" icon (circle r=1, stroke 2 => 4 units across) sized in px.
     const char* dotBody = kIcons[DotIndex()].body;
     const float dotScale = std::max(1, s.dotSize) / 4.0f;
     const float dotOrigin = w_ / 2.0f - (kMargin + 12.0f) * dotScale;
@@ -222,4 +216,4 @@ const Bitmap& Renderer::Compose(const Settings& s, double seconds, bool* changed
     return bmp_;
 }
 
-} // namespace OLDR
+} 
