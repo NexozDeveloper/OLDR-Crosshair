@@ -12,9 +12,9 @@
 namespace oldr {
 
 enum ChangeFlags : unsigned {
-    kChangedVisual = 1,    // look / position of the crosshair
-    kChangedHotkeys = 2,   // hotkeys must be re-registered
-    kChangedStartup = 4,   // "start with Windows" toggled
+    kChangedVisual = 1, // look / position of the crosshair
+    kChangedHotkeys = 2, // hotkeys must be re-registered
+    kChangedStartup = 4, // "start with Windows" toggled
     kChangedAny = 7,
 };
 
@@ -32,8 +32,8 @@ public:
     HWND hwnd() const { return hwnd_; }
     void Show();
     void Hide();
-    bool PreTranslate(MSG* msg);                 // keyboard navigation inside the pages
-    void SyncFromSettings();                     // refresh every control from the settings
+    bool PreTranslate(MSG* msg); // keyboard navigation inside the pages
+    void SyncFromSettings(); // refresh every control from the settings
     void SetHotkeyStatus(bool toggleOk, bool openOk);
 
     // ---- used by the static window procedures ----
@@ -91,10 +91,10 @@ private:
     HWND monitorCombo_ = nullptr, modsCombo_ = nullptr, toggleCombo_ = nullptr, openCombo_ = nullptr;
 
     int hoverIcon_ = -1;
-    std::vector<std::vector<uint8_t>> tiles_;     // cached alpha masks for the gallery
+    std::vector<std::vector<uint8_t>> tiles_; // cached alpha masks for the gallery
     int tilePx_ = 0;
     Renderer previewRenderer_;
     ULONGLONG startTick_ = 0;
 };
 
-}  // namespace oldr
+}  // namespace OLDR
