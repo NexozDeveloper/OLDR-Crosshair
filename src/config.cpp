@@ -84,7 +84,7 @@ struct Io {
     }
 };
 
-}  // namespace
+} // namespace
 
 std::wstring ConfigDirectory() {
     std::wstring dir;
@@ -125,4 +125,4 @@ bool SetRunAtStartup(bool enable) {
     return rc == ERROR_SUCCESS;
 }
 
-}  // namespace OLDR
+} // namespace OLDR
