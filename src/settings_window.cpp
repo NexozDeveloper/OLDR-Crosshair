@@ -163,7 +163,7 @@ const wchar_t* kPreviewClass = L"OLDR_Crosshair_Preview";
 
 constexpr int kGalleryCols = 4;
 
-}  // namespace
+} // namespace
 
 // ---------------------------------------------------------------- helper structs
 struct SettingsWindow::SliderCtl { int idx; HWND bar; HWND value; };
@@ -962,4 +962,4 @@ INT_PTR CALLBACK SettingsWindow::PageProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM
     return FALSE;
 }
 
-}  // namespace oldr
+}  // namespace OLDR
