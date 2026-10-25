@@ -125,4 +125,4 @@ bool SetRunAtStartup(bool enable) {
     return rc == ERROR_SUCCESS;
 }
 
-}  // namespace oldr
+}  // namespace OLDR
