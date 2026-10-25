@@ -10,7 +10,6 @@ if(NOT WIN32)
     message(FATAL_ERROR "OLDR Crosshair is a Windows application (Win32 API).")
 endif()
 
-# Static CRT on MSVC so the exe runs without the VC++ redistributable.
 if(MSVC)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
@@ -57,7 +56,6 @@ target_compile_definitions(OLDR_Crosshair PRIVATE
     WINVER=0x0A00 _WIN32_WINNT=0x0A00
 )
 
-# Re-link the resources when the icon or manifest change.
 set_source_files_properties(resources/app.rc PROPERTIES
     OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/resources/app.manifest;${CMAKE_CURRENT_SOURCE_DIR}/resources/app.ico"
 )
@@ -68,12 +66,10 @@ target_link_libraries(OLDR_Crosshair PRIVATE
 
 if(MSVC)
     target_compile_options(OLDR_Crosshair PRIVATE /W4 /utf-8 /permissive- /MP)
-    # The manifest is embedded through app.rc.
     target_link_options(OLDR_Crosshair PRIVATE /MANIFEST:NO)
 else()
     target_compile_options(OLDR_Crosshair PRIVATE -Wall -Wextra -Wno-missing-field-initializers)
     target_link_options(OLDR_Crosshair PRIVATE -mwindows -static -static-libgcc -static-libstdc++)
 endif()
 
-# Visual Studio: start the project from the Solution Explorer with F5.
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT OLDR_Crosshair)
