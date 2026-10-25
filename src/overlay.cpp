@@ -21,7 +21,7 @@ BOOL CALLBACK EnumProc(HMONITOR mon, HDC, LPRECT, LPARAM lp) {
     return TRUE;
 }
 
-}  // namespace
+} // namespace
 
 std::vector<MonitorInfo> ListMonitors() {
     std::vector<MonitorInfo> list;
@@ -184,4 +184,4 @@ void Overlay::Tick(bool keepTopmost) {
         SetWindowPos(hwnd_, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 }
 
-}  // namespace oldr
+} // namespace OLDR
