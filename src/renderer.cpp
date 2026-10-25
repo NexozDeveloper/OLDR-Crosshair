@@ -60,7 +60,7 @@ void BoxBlur(std::vector<uint8_t>& a, int w, int h, int radius) {
     std::vector<float> cur(a.begin(), a.end());
     const float inv = 1.0f / (2 * r + 1);
     for (int pass = 0; pass < 3; ++pass) {
-        for (int y = 0; y < h; ++y) {                 // horizontal
+        for (int y = 0; y < h; ++y) { // horizontal
             const float* src = &cur[static_cast<size_t>(y) * w];
             float* dst = &tmp[static_cast<size_t>(y) * w];
             float sum = 0;
@@ -71,7 +71,7 @@ void BoxBlur(std::vector<uint8_t>& a, int w, int h, int radius) {
                 sum += (add < w ? src[add] : 0.0f) - (sub >= 0 ? src[sub] : 0.0f);
             }
         }
-        for (int x = 0; x < w; ++x) {                 // vertical
+        for (int x = 0; x < w; ++x) { // vertical
             float sum = 0;
             for (int y = 0; y <= r && y < h; ++y) sum += tmp[static_cast<size_t>(y) * w + x];
             for (int y = 0; y < h; ++y) {
@@ -101,7 +101,7 @@ uint32_t HueToRgb(double hueDeg) {
            static_cast<uint32_t>(b * 255 + 0.5);
 }
 
-struct Px { uint32_t a = 0, r = 0, g = 0, b = 0; };   // premultiplied, 0..255
+struct Px { uint32_t a = 0, r = 0, g = 0, b = 0; }; // premultiplied, 0..255
 
 inline void Over(Px& d, uint8_t mask, uint32_t rgb, uint32_t globalAlpha) {
     if (!mask) return;
@@ -128,7 +128,7 @@ void Renderer::RenderTile(int iconIndex, int tilePx, float stroke, std::vector<u
 }
 
 void Renderer::BuildMasks(const Settings& s) {
-    const float scale = s.size / kBox;                         // px per Lucide unit
+    const float scale = s.size / kBox; // px per Lucide unit
     const int inner = static_cast<int>(std::ceil(kView * scale));
     const int pad = s.glow ? s.glowRadius * 2 + 2 : 0;
     w_ = h_ = inner + pad * 2;
@@ -222,4 +222,4 @@ const Bitmap& Renderer::Compose(const Settings& s, double seconds, bool* changed
     return bmp_;
 }
 
-}  // namespace oldr
+} // namespace OLDR
