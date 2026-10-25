@@ -21,7 +21,7 @@ BOOL CALLBACK EnumProc(HMONITOR mon, HDC, LPRECT, LPARAM lp) {
     return TRUE;
 }
 
-} // namespace
+}
 
 std::vector<MonitorInfo> ListMonitors() {
     std::vector<MonitorInfo> list;
@@ -128,7 +128,7 @@ void Overlay::Present(const Bitmap& bmp) {
         BITMAPINFO bi{};
         bi.bmiHeader.biSize = sizeof(bi.bmiHeader);
         bi.bmiHeader.biWidth = bmp.w;
-        bi.bmiHeader.biHeight = -bmp.h;         // top-down
+        bi.bmiHeader.biHeight = -bmp.h;      
         bi.bmiHeader.biPlanes = 1;
         bi.bmiHeader.biBitCount = 32;
         bi.bmiHeader.biCompression = BI_RGB;
@@ -184,4 +184,4 @@ void Overlay::Tick(bool keepTopmost) {
         SetWindowPos(hwnd_, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 }
 
-} // namespace OLDR
+} 
