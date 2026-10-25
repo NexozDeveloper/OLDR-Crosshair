@@ -1,4 +1,3 @@
-// OLDR Crosshair - the click-through, always-on-top crosshair window.
 #pragma once
 #include <windows.h>
 
@@ -19,7 +18,7 @@ class Overlay {
 public:
     bool Create(HINSTANCE instance, const Settings* settings);
     void Destroy();
-    void Refresh(); // call after any settings change
+    void Refresh();
 
 private:
     static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -42,4 +41,4 @@ private:
     ULONGLONG startTick_ = 0;
 };
 
-} // namespace OLDR
+} 
