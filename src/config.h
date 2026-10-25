@@ -6,9 +6,9 @@
 
 namespace oldr {
 
-std::wstring ConfigDirectory();                 // %APPDATA%\OLDR Crosshair (created on demand)
+std::wstring ConfigDirectory(); // %APPDATA%\OLDR Crosshair (created on demand)
 void LoadSettings(Settings& s);
 void SaveSettings(const Settings& s);
-bool SetRunAtStartup(bool enable);              // HKCU\...\Run
+bool SetRunAtStartup(bool enable); // HKCU\...\Run
 
-}  // namespace oldr
+}  // namespace OLDR
