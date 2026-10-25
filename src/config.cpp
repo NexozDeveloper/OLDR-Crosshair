@@ -25,7 +25,6 @@ struct Io {
             WritePrivateProfileStringW(kSection, key, b, path.c_str());
         } else {
             v = static_cast<int>(GetPrivateProfileIntW(kSection, key, v, path.c_str()));
-            // GetPrivateProfileInt reads unsigned; negative numbers need manual parsing.
             wchar_t b[32] = {};
             GetPrivateProfileStringW(kSection, key, L"", b, 32, path.c_str());
             if (b[0] == L'-') v = static_cast<int>(std::wcstol(b, nullptr, 10));
@@ -84,7 +83,7 @@ struct Io {
     }
 };
 
-} // namespace
+} 
 
 std::wstring ConfigDirectory() {
     std::wstring dir;
@@ -125,4 +124,4 @@ bool SetRunAtStartup(bool enable) {
     return rc == ERROR_SUCCESS;
 }
 
-} // namespace OLDR
+}
