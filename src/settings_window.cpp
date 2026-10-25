@@ -17,7 +17,6 @@
 namespace oldr {
 namespace {
 
-// ---------------------------------------------------------------- control tables
 enum SliderIdx { SL_SIZE, SL_THICKNESS, SL_OPACITY, SL_ROTATION, SL_OUTLINE_W, SL_DOT_SIZE, SL_GLOW_R,
                  SL_GLOW_S, SL_RAINBOW, SL_PULSE, SL_OFFX, SL_OFFY, SL_COUNT };
 enum CheckIdx { CK_ENABLED, CK_OUTLINE, CK_DOT, CK_GLOW, CK_RAINBOW, CK_PULSE, CK_FOLLOW, CK_HIDECUR,
@@ -118,7 +117,6 @@ UINT DpiOf(HWND hwnd) {
     return d > 0 ? static_cast<UINT>(d) : 96;
 }
 
-// Alpha-blends premultiplied 0xAARRGGBB pixels onto `dc`.
 void BlendPremul(HDC dc, int x, int y, int w, int h, const uint32_t* px) {
     if (w <= 0 || h <= 0) return;
     BITMAPINFO bi{};
@@ -163,14 +161,12 @@ const wchar_t* kPreviewClass = L"OLDR_Crosshair_Preview";
 
 constexpr int kGalleryCols = 4;
 
-} // namespace
+} 
 
-// ---------------------------------------------------------------- helper structs
 struct SettingsWindow::SliderCtl { int idx; HWND bar; HWND value; };
 struct SettingsWindow::CheckCtl { int idx; HWND hwnd; };
 struct SettingsWindow::ColorCtl { int idx; HWND swatch; HWND edit; HWND label; };
 
-// Lays controls out top-to-bottom inside one tab page. All values are 96-dpi units.
 struct SettingsWindow::PageBuilder {
     SettingsWindow* w;
     HWND page;
@@ -240,7 +236,6 @@ struct SettingsWindow::PageBuilder {
 SettingsWindow::SettingsWindow() = default;
 SettingsWindow::~SettingsWindow() = default;
 
-// ---------------------------------------------------------------- creation
 bool SettingsWindow::Create(HINSTANCE instance, Settings* settings, Callbacks callbacks, bool showNow) {
     instance_ = instance;
     s_ = settings;
@@ -342,7 +337,6 @@ void SettingsWindow::BuildUi() {
     fontSmall_ = CreateFontW(-MulDiv(8, static_cast<int>(dpi_), 72), 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0,
                              0, CLEARTYPE_QUALITY, 0, L"Segoe UI");
 
-    // ---- left column: preview, gallery, presets, master switch
     preview_ = CreateWindowExW(0, kPreviewClass, L"", WS_CHILD | WS_VISIBLE, S(16), S(12), S(300), S(200), hwnd_,
                                nullptr, instance_, this);
     gallery_ = CreateWindowExW(0, kGalleryClass, L"", WS_CHILD | WS_VISIBLE, S(16), S(222), S(300), S(266), hwnd_,
@@ -368,7 +362,6 @@ void SettingsWindow::BuildUi() {
                             ID_CHECK_BASE + CK_ENABLED);
     checks_.push_back({CK_ENABLED, enabled});
 
-    // ---- right column: tabs
     tab_ = CreateWindowExW(0, WC_TABCONTROLW, L"", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_TABSTOP, S(332),
                            S(12), S(512), S(548), hwnd_, reinterpret_cast<HMENU>(static_cast<INT_PTR>(ID_TAB)),
                            instance_, nullptr);
@@ -381,7 +374,6 @@ void SettingsWindow::BuildUi() {
         SendMessageW(tab_, TCM_INSERTITEMW, i, reinterpret_cast<LPARAM>(&ti));
     }
 
-    // pages: modeless DS_CONTROL dialogs get the themed tab background for free
     struct {
         DLGTEMPLATE t;
         WORD menu, cls, title;
@@ -423,7 +415,6 @@ void SettingsWindow::ShowPage(int index) {
     for (int i = 0; i < static_cast<int>(pages_.size()); ++i) ShowWindow(pages_[i], i == index ? SW_SHOW : SW_HIDE);
 }
 
-// ---------------------------------------------------------------- pages
 void SettingsWindow::BuildAppearancePage(PageBuilder& b) {
     b.Header(L"Color & shape");
     b.Color(CO_MAIN);
@@ -513,7 +504,6 @@ void SettingsWindow::FillMonitorCombo() {
     }
 }
 
-// ---------------------------------------------------------------- state <-> controls
 void SettingsWindow::UpdateSliderText(SliderCtl& c) {
     const SliderDef& d = kSliders[c.idx];
     const int pos = static_cast<int>(SendMessageW(c.bar, TBM_GETPOS, 0, 0));
@@ -622,7 +612,6 @@ void SettingsWindow::PickColor(ColorCtl& c) {
     Changed(kChangedVisual);
 }
 
-// ---------------------------------------------------------------- events
 void SettingsWindow::OnHScroll(LPARAM lp) {
     HWND bar = reinterpret_cast<HWND>(lp);
     for (auto& c : sliders_) {
@@ -721,7 +710,6 @@ void SettingsWindow::OnDrawItem(const DRAWITEMSTRUCT* dis) {
     }
 }
 
-// ---------------------------------------------------------------- gallery & preview
 void SettingsWindow::PaintGallery(HWND wnd) {
     PAINTSTRUCT ps;
     HDC dc = BeginPaint(wnd, &ps);
@@ -820,7 +808,6 @@ void SettingsWindow::PaintPreview(HWND wnd) {
     HGDIOBJ old = SelectObject(mem, bm);
     FillRectColor(mem, rc, RGB(22, 22, 26));
 
-    // subtle grid, brighter center axes
     const int step = S(20);
     HPEN grid = CreatePen(PS_SOLID, 1, RGB(32, 32, 38));
     HPEN axis = CreatePen(PS_SOLID, 1, RGB(48, 48, 58));
@@ -834,7 +821,6 @@ void SettingsWindow::PaintPreview(HWND wnd) {
     DeleteObject(grid);
     DeleteObject(axis);
 
-    // Shrink the settings so the whole crosshair (glow included) fits the panel.
     Settings p = *s_;
     const double canvas = p.size * 1.5 + (p.glow ? p.glowRadius * 4.0 + 4 : 0);
     const double room = std::min(w, h) - S(16);
@@ -862,7 +848,6 @@ void SettingsWindow::PaintPreview(HWND wnd) {
     EndPaint(wnd, &ps);
 }
 
-// ---------------------------------------------------------------- window procedures
 LRESULT SettingsWindow::HandleMessage(UINT msg, WPARAM wp, LPARAM lp) {
     LRESULT result = 0;
     if (cb_.extra && cb_.extra(msg, wp, lp, result)) return result;
@@ -962,4 +947,4 @@ INT_PTR CALLBACK SettingsWindow::PageProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM
     return FALSE;
 }
 
-}  // namespace OLDR
+} 
