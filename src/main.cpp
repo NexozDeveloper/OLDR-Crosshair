@@ -1,4 +1,3 @@
-// OLDR Crosshair - application entry point: tray icon, hotkeys, single instance.
 #include <windows.h>
 #include <shellapi.h>
 
@@ -26,7 +25,7 @@ public:
     int Run(HINSTANCE instance, bool startHidden) {
         instance_ = instance;
         LoadSettings(settings_);
-        if (settings_.runAtStartup) SetRunAtStartup(true); // keeps the entry valid if the exe moved
+        if (settings_.runAtStartup) SetRunAtStartup(true);
 
         taskbarCreated_ = RegisterWindowMessageW(L"TaskbarCreated");
         showMessage_ = RegisterWindowMessageW(L"OLDR_Crosshair_ShowSettings");
@@ -55,7 +54,7 @@ private:
         if (flags & kChangedVisual) overlay_.Refresh();
         if (flags & kChangedHotkeys) RegisterHotkeys();
         if (flags & kChangedStartup) SetRunAtStartup(settings_.runAtStartup);
-        SetTimer(window_.hwnd(), kSaveTimer, 500, nullptr); // debounced save
+        SetTimer(window_.hwnd(), kSaveTimer, 500, nullptr);
     }
 
     void RegisterHotkeys() {
@@ -135,7 +134,7 @@ private:
         }
         if (msg == taskbarCreated_) { AddTrayIcon(); return true; }
         if (msg == showMessage_) { window_.Show(); return true; }
-        if (msg == WM_DESTROY) { // let the window finish its own cleanup afterwards
+        if (msg == WM_DESTROY) { 
             SaveSettings(settings_);
             UnregisterHotKey(window_.hwnd(), kHotkeyToggle);
             UnregisterHotKey(window_.hwnd(), kHotkeyOpen);
@@ -164,10 +163,9 @@ bool HasArg(const wchar_t* name) {
     return found;
 }
 
-} // namespace
+} 
 
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int) {
-    // One instance only: wake the running one instead.
     HANDLE mutex = CreateMutexW(nullptr, TRUE, L"OLDR_Crosshair_SingleInstance");
     if (GetLastError() == ERROR_ALREADY_EXISTS) {
         const UINT showMsg = RegisterWindowMessageW(L"OLDR_Crosshair_ShowSettings");
