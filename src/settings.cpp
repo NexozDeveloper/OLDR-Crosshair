@@ -20,7 +20,7 @@ int IconIndex(const char* id) {
 template <typename T>
 void Clamp(T& v, T lo, T hi) { v = std::min(std::max(v, lo), hi); }
 
-}  // namespace
+} // namespace
 
 void ApplyDefaultLook(Settings& s) {
     const Settings d;
@@ -105,4 +105,4 @@ void Sanitize(Settings& s) {
     s.dotColor &= 0xFFFFFF; s.glowColor &= 0xFFFFFF;
 }
 
-}  // namespace oldr
+} // namespace OLDR
