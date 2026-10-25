@@ -1,7 +1,3 @@
-// OLDR Crosshair - software renderer.
-// Rasterizes the official Lucide SVG icons (via nanosvg) into alpha masks and
-// composes glow / outline / icon / center dot into a premultiplied BGRA bitmap.
-// Portable C++ (no Windows dependency) so it can be unit-tested anywhere.
 #pragma once
 #include <cstdint>
 #include <vector>
@@ -12,18 +8,15 @@ namespace oldr {
 
 struct Bitmap {
     int w = 0, h = 0;
-    std::vector<uint32_t> px;   // premultiplied 0xAARRGGBB, top-down
+    std::vector<uint32_t> px;
 };
 
 class Renderer {
 public:
-    // Composes the crosshair for time `seconds` (drives rainbow / pulse).
-    // `changed` is set to false when the returned bitmap is identical to the previous call.
     const Bitmap& Compose(const Settings& s, double seconds, bool* changed = nullptr);
 
     static bool IsAnimated(const Settings& s) { return s.rainbow || s.pulse; }
 
-    // 8-bit alpha mask of one icon on a square tile (used by the icon gallery).
     static void RenderTile(int iconIndex, int tilePx, float stroke, std::vector<uint8_t>& alpha);
 
 private:
@@ -49,4 +42,4 @@ private:
     Bitmap bmp_;
 };
 
-}  // namespace oldr
+} 
